@@ -1,0 +1,3 @@
+[submodule "Src/hpm_sdk"]
+	path = Src/hpm_sdk
+	url = git@github.com:hpmicro/hpm_sdk.git

@@ -1,0 +1,114 @@
+<DataBase>
+  <!--                   -->
+  <!-- HPMicro           -->
+  <!--                   -->
+  <!-- HPM6700           -->
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6750xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6730xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6750xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6730xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6754xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x400000" Loader="Devices/hpmicro/HPM6700/HPM6754xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6754xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x400000" Loader="Devices/hpmicro/HPM6700/HPM6754xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6758xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x800000" Loader="Devices/hpmicro/HPM6700/HPM6754xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6758xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x800000" Loader="Devices/hpmicro/HPM6700/HPM6754xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <!-- HPM6100           -->
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6110xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6110xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6120xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6120xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <!-- HPM6400           -->
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6450xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6430xVMx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xVMx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6450xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6430xANx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6700/HPM6750xANx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <!-- HPM6300           -->
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6360xPAx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6360xEPx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6350xPAx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6350xEPx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6340xPAx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6340xEPx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6320xPAx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6320xEPx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x10000000" Loader="Devices/hpmicro/HPM6300/HPM6360xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6364xPAx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x400000" Loader="Devices/hpmicro/HPM6300/HPM6364xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+   <ChipInfo Vendor="HPMicro" Name="HPM6364xEPx" Core="JLINK_CORE_RV32" WorkRAMAddr="0x0" WorkRAMSize="0x00020000" />
+   <FlashBankInfo Name="QSPI Flash" BaseAddr="0x80000000" MaxSize="0x400000" Loader="Devices/hpmicro/HPM6300/HPM6364xxxx_QSPI.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+
+</DataBase>

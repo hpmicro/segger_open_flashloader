@@ -1,0 +1,134 @@
+/*********************************************************************
+*                    SEGGER Microcontroller GmbH                     *
+*                        The Embedded Experts                        *
+**********************************************************************
+*                                                                    *
+*            (c) 2014 - 2020 SEGGER Microcontroller GmbH             *
+*                                                                    *
+*       www.segger.com     Support: support@segger.com               *
+*                                                                    *
+**********************************************************************
+*                                                                    *
+* All rights reserved.                                               *
+*                                                                    *
+* Redistribution and use in source and binary forms, with or         *
+* without modification, are permitted provided that the following    *
+* condition is met:                                                  *
+*                                                                    *
+* - Redistributions of source code must retain the above copyright   *
+*   notice, this condition and the following disclaimer.             *
+*                                                                    *
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND             *
+* CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,        *
+* INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF           *
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE           *
+* DISCLAIMED. IN NO EVENT SHALL SEGGER Microcontroller BE LIABLE FOR *
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           *
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  *
+* OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;    *
+* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF      *
+* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT          *
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  *
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH   *
+* DAMAGE.                                                            *
+*                                                                    *
+**********************************************************************
+-------------------------- END-OF-HEADER -----------------------------
+
+File    : SEGGER_Flash_RISCV.icf
+Purpose : Generic linker script for application placement in Flash,
+          for use with the SEGGER Linker.
+*/
+
+define memory with size = 4G;
+
+//
+// Combined regions per memory type
+//
+define region RAMCODE = RAM;
+
+//
+// Block definitions
+//
+define block vectors                        { section .vectors };                                   // Vector table section
+define block vectors_ram                    { section .vectors_ram };                               // Vector table section
+define block ctors                          { section .ctors,     section .ctors.*, block with         alphabetical order { init_array } };
+define block dtors                          { section .dtors,     section .dtors.*, block with reverse alphabetical order { fini_array } };
+define block tbss                           { section .tbss,      section .tbss.*  };
+define block tdata                          { section .tdata,     section .tdata.* };
+define block tls                            { block tbss, block tdata };
+define block tdata_load                     { copy of block tdata };
+define block heap  with size = __HEAPSIZE__,  alignment = 8, /* fill =0x00, */ readwrite access { };
+define block stack with size = __STACKSIZE__, alignment = 8, /* fill =0xCD, */ readwrite access { };
+//
+// Explicit initialization settings for sections
+// As OFL does not provide a unique entry point,
+// there is no startup code that initializes any statics / globals / ...
+//
+do not initialize                           { section .non_init, section .non_init.*, section .*.non_init, section .*.non_init.* };
+do not initialize                           { section .no_init, section .no_init.*, section .*.no_init, section .*.no_init.* };   // Legacy sections, kept for backwards compatibility
+do not initialize                           { section .noinit, section .noinit.*, section .*.noinit, section .*.noinit.* };       // Legacy sections, used by some SDKs/HALs
+do not initialize                           { block vectors_ram };
+do not initialize                           { section .data, section .data.*, section .*.data, section .*.data.* };               // Static data sections
+do not initialize                           { section .sdata, section .sdata.* };
+do not initialize                           { section .fast, section .fast.* };                                                   // "RAM Code" sections
+do not initialize                           { section .bss, section .bss.* };                       // Static data section
+do not initialize                           { section .sbss, section .sbss.* };
+do not initialize                           { block stack };                                        // Init the heap if there is one
+do not initialize                           { block heap  };                                        // Init the heap if there is one
+do not initialize                           { block ctors };                                        // Call constructors for global objects which need to be constructed before reaching main (if any). Make sure this is done after setting up heap.
+do not initialize                           { section PrgData, section PrgData.* };
+do not initialize                           { rw };                                                 // Do not initialize static / global variables
+
+define block Block_CodeROData with auto order    {
+                                              //
+                                              // Code + constant data placement
+                                              //
+                                              section .init,   section .init.*,                     // Init code section
+                                              section .init_rodata, section .init_rodata.*,         // Init read-only section
+                                              section .text,   section .text.*,                     // Code section
+                                              section .rodata, section .rodata.*,                   // Read-only data section
+                                              section .sdata2, section .sdata2.*,
+                                              section .srodata, section .srodata.*,
+                                              block ctors,                                          // Constructors block
+                                              block dtors,                                          // Destructors block
+                                              block tdata_load                                      // Thread-local-storage load image
+                                            };
+define block Block_RWData with minimum size order {
+                                              //
+                                              // Statics, globals, ... placement
+                                              //
+                                              section .non_init, section .non_init.*,               // No initialization section
+                                              section .no_init, section .no_init.*,                 // No initialization section, for backwards compatibility
+                                              section .noinit, section .noinit.*,                   // No initialization section, used by some SDKs/HALs
+                                              block tls,                                            // Thread-local-storage block
+                                              section .fast, section .fast.*,                       // "ramfunc" section
+                                              section .data, section .data.*,                       // Initialized data section
+                                              section .sdata, section .sdata.*,
+                                              section .bss, section .bss.*,                         // Static data section
+                                              section .sbss, section .sbss.*,
+                                            };
+
+define block Block_PrgCode                  { section PrgCode, section PrgCode.* };                 // Open flash loader specific: Marks the start of the RAMCode
+define block Block_PrgData                  { section PrgData, section PrgData.* };                 // Open flash loader specific: Marks the start of the data section (statics, globals, ...)
+
+place in RAMCODE with fixed order           { 
+                                              //
+                                              // For the release build, the order of certain sections is very important
+                                              // In the address range, the order needs to be as follows:
+                                              // PrgCode (containing all code + readonly data)
+                                              // PrgData (containing all static / global variables etc.)
+                                              // DevDscr (containing the <FlashDevice> variable)
+                                              // This order cannot be changed as the J-Link software expects this order!
+                                              // However, inside the block <Block_CodeROData> there can be multiple sections etc. as long as <PrgCode> is placed in memory as the first one
+                                              // Same for Block_RWData. <PrgData> needs to be the first one and all statics / globals must follow that one. Stacks etc. may be placed afterwards
+                                              //
+                                              block Block_PrgCode,
+                                              block Block_CodeROData,
+                                              section .segger, section .segger.*,                   // Auto-generated initialization. Cannot be defined in a block
+                                              block Block_PrgData,
+                                              block Block_RWData,
+                                              block heap,                                           // Heap reserved block
+                                              block stack,                                          // Stack reserved block at the end
+                                              last section DevDscr                                  // Special placement (constant again but it's all RAMCode...). Must be the last section acc. to open flash loader spec.
+                                            };

@@ -1,0 +1,100 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="Flashloader" target="20" version="2">
+  <configuration
+    Name="Common"
+    c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/boards/hpm6750evkmini;$(SolutionDir)/Src/hpm_sdk/drivers/inc;$(SolutionDir)/Src/hpm_sdk/soc/HPM6750/;$(SolutionDir)/Src/hpm_sdk/soc/ip;$(SolutionDir)/Src/hpm_sdk/arch"
+    debug_target_connection="J-Link"
+    gcc_enable_all_warnings="Yes" />
+  <configuration
+    Name="Debug"
+    c_preprocessor_definitions="DEBUG"
+    gcc_debugging_level="Level 3"
+    gcc_optimization_level="None" />
+  <configuration Name="HPM6360xxxx" />
+  <configuration Name="HPM6364xxxx" />
+  <configuration Name="HPM6750xANx" />
+  <configuration Name="HPM6750xVMx" />
+  <configuration Name="HPM6754xxxx" debug_target_connection="J-Link" />
+  <project Name="Flashloader">
+    <configuration
+      Name="Common"
+      arm_linker_heap_size="1024"
+      arm_linker_stack_size="1024"
+      arm_linker_variant="SEGGER"
+      batch_build_configurations="HPM6360xxxx;HPM6364xxxx;HPM6750xANx;HPM6750xVMx;HPM6754xxxx"
+      build_output_file_name="$(OutDir)/$(Configuration)_QSPI$(EXE)"
+      heap_size="0"
+      link_linker_script_file="$(ProjectDir)/Setup/Placement.icf"
+      linker_keep_symbols="PRGDATA_StartMarker;SEGGER_OFL_Api;FlashDevice"
+      linker_memory_map_file="$(ProjectDir)/Setup/MemoryMap.xml"
+      linker_output_format="hex"
+      linker_section_placement_file=""
+      linker_section_placements_segments=""
+      post_build_command_control="Always Run"
+      project_type="Executable"
+      rv_abi="ilp32"
+      rv_architecture="rv32imac"
+      rv_relax="No"
+      stack_size="4096"
+      target_device_name="RISC-V" />
+    <configuration
+      Name="Debug"
+      c_preprocessor_definitions="DEBUG=1;XPI_FLASH_SIZE=0x10000000;NOR_CFG_OPT1=0"
+      debug_target_connection="GDB Server"
+      gcc_optimization_level="None"
+      gdb_server_allow_memory_access_during_execution="Yes"
+      gdb_server_autostart_server="No"
+      gdb_server_command_line=""
+      gdb_server_ignore_checksum_errors="No"
+      gdb_server_port="3333"
+      gdb_server_register_access="General and Individual"
+      gdb_server_reset_command="reset halt"
+      gdb_server_type="OpenOCD"
+      rv_abi="ilp32"
+      rv_architecture="rv32gc"
+      stack_size="4096" />
+    <configuration
+      Name="HPM6360xxxx"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x1000000;NOR_CFG_OPT1=0"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6300/" />
+    <configuration
+      Name="HPM6364xxxx"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;NOR_CFG_OPT1=0x1000"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6300/" />
+    <configuration
+      Name="HPM6750xANx"
+      c_preprocessor_definitions="DEBUG=0;NOR_CFG_OPT1=0x100;XPI_FLASH_SIZE=0x10000000"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/"
+      stack_size="4096" />
+    <configuration
+      Name="HPM6750xVMx"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x1000000;NOR_CFG_OPT1=0"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/" />
+    <configuration
+      Name="HPM6754xxxx"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;NOR_CFG_OPT1=0x1000"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/" />
+    <folder Name="Setup">
+      <file file_name="Setup/MemoryMap.xml" />
+      <file file_name="Setup/Placement.icf" />
+    </folder>
+    <folder Name="Src">
+      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
+      <file file_name="Src/FlashDev.c" />
+      <file file_name="Src/FlashOS.h" />
+      <file file_name="Src/FlashPrg.c" />
+      <file file_name="Src/SEGGER_OFL_Lib_RV32.a" />
+      <file file_name="Src/SEGGER_RV32_crt0.s">
+        <configuration Name="HPM6754xxxx" build_exclude_from_build="No" />
+      </file>
+      <file file_name="Src/main.c">
+        <configuration Name="HPM6750EVKMINI" build_exclude_from_build="No" />
+        <configuration Name="HPM6754xxxx" build_exclude_from_build="No" />
+      </file>
+    </folder>
+  </project>
+</solution>
