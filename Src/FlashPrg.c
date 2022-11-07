@@ -84,7 +84,7 @@ Purpose : Implementation of RAMCode template
 **********************************************************************
 */
 
-#define PAGE_SIZE_SHIFT              (3)   // Smallest amount of data that can be programmed. <PageSize> = 2 ^ Shift. Shift = 3 => <PageSize> = 2^3 = 8 bytes
+#define PAGE_SIZE_SHIFT              (8)   // Smallest amount of data that can be programmed. <PageSize> = 2 ^ Shift. Shift = 3 => <PageSize> = 2^3 = 8 bytes
 #define SECTOR_SIZE_SHIFT           (12)   // Flashes with uniform sectors only. <SectorSize> = 2 ^ Shift. Shift = 12 => <SectorSize> = 2 ^ 12 = 4096 bytes
 
 #define FLASH_INITED_FLAG           (0xAA5A55A5)

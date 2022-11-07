@@ -75,7 +75,7 @@ struct FlashDevice const FlashDevice __attribute__ ((section ("DevDscr"))) = {
   1,                              // Flash device type. Must be == 1
   0x80000000,                     // Flash base address
   XPI_FLASH_SIZE,                     // Total flash device size in Bytes
-  512,                            // Page Size (Will be passed as <NumBytes> to ProgramPage(). A multiple of this is passed as <NumBytes> to SEGGER_OPEN_Program() to program moer than 1 page in 1 RAMCode call, speeding up programming).
+  256,                            // Page Size (Will be passed as <NumBytes> to ProgramPage(). A multiple of this is passed as <NumBytes> to SEGGER_OPEN_Program() to program moer than 1 page in 1 RAMCode call, speeding up programming).
   0,                              // Reserved, should be 0
   0xFF,                           // Flash erased value
   100,                            // Program page timeout in ms
