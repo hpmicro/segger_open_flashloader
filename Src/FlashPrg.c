@@ -47,19 +47,15 @@
 File    : FlashPrg.c
 Purpose : Implementation of RAMCode template
 */
-#include "board.h"
-#include "hpm_common.h"
-#include "hpm_l1c_drv.h"
-#include "hpm_romapi.h"
 
-#define XPI0_MEM_START (0x80000000UL)
-#define XPI1_MEM_START (0x90000000UL)
-#define XPI_USE_PORT_B_MASK (0x100)
-#define XPI_USE_PORT_A_MASK (0)
-#define XPI_USE_PORT_SHIFT (0x8)
 
 #include <stddef.h>
 #include "FlashOS.h"
+#include "FlashDev.h"
+
+#include "hpm_common.h"
+#include "hpm_l1c_drv.h"
+#include "hpm_romapi.h"
 
 /*********************************************************************
 *
@@ -67,7 +63,9 @@ Purpose : Implementation of RAMCode template
 *
 **********************************************************************
 */
-
+#define XPI_USE_PORT_B_MASK (0x100)
+#define XPI_USE_PORT_A_MASK (0)
+#define XPI_USE_PORT_SHIFT (0x8)
 //
 // Only compile in functions that make sense to keep RAMCode as small as possible
 //
@@ -119,40 +117,12 @@ typedef struct {
   U32 AddVariablesHere;
 } RESTORE_INFO;
 
-static void _FeedWatchdog(void);
-
 /*********************************************************************
 *
 *       Static data
 *
 **********************************************************************
 */
-
-static RESTORE_INFO _RestoreInfo;
-const uint8_t flash_config_dummy[256] = {
-	0x58, 0x4E, 0x4F, 0x52, 0x00, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-	0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x01, 0x04, 0x00, 0x40, 0x00, 0x00, 0x00, 0x02, 0x00, 0x01, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x01, 0x07, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0xEB, 0x04, 0x18, 0x0A, 0x00, 0x1E, 0x04, 0x32,
-	0x04, 0x26, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x18, 0x08,
-	0x04, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x05, 0x04, 0x04, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x04, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x20, 0x04, 0x18, 0x08, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD8, 0x04, 0x18, 0x08,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x60, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00
-};
 
 typedef struct {
     uint32_t total_sz_in_bytes;
@@ -164,7 +134,7 @@ xpi_nor_config_option_t cfg_option;
 uint32_t xpi_inited;
 uint32_t channel;
 uint32_t flash_base_addr;
-XPI_Type *xpi_base;;
+XPI_Type *xpi_base;
 /*********************************************************************
 *
 *       Public data
@@ -197,6 +167,53 @@ const SEGGER_OFL_API SEGGER_OFL_Api __attribute__ ((section ("PrgCode"))) = {   
 **********************************************************************
 */
 
+static void refresh_device_size(XPI_Type *base, xpi_nor_config_option_t *option)
+{
+    volatile uint32_t *dev_size = (volatile uint32_t *)((uint32_t)base + 0x60);
+    bool enable_channelb = false;
+    if (option->header.words > 1) {
+        enable_channelb = option->option1.connection_sel == xpi_nor_connection_sel_chnb_cs0;
+    }
+    if (enable_channelb) {
+        dev_size[0] = 0;
+        dev_size[1] = 0;
+    }
+}
+
+#define CHIP_HAS_SIP_FLASH(otp) (otp & (1 << 24))
+static int flash_auto_probe(XPI_Type *base, xpi_nor_config_option_t *opt, xpi_nor_config_t *cfg, uint32_t *xpi_ch)
+{
+
+    uint32_t opt1_set[] = {
+                            0x1000, /* Pin group 1 & CA */
+                            0x0000, /* Pin group 0 & CA */
+                            0x0100, /* Pin group 0 & CB */
+                          };
+    uint32_t otp = ROM_API_TABLE_ROOT->otp_driver_if->read_from_shadow(7); /* OTP: word 7 */
+
+    opt->header.U = 0xFCF90002;
+    opt->option0.U = 0x5;
+
+    for (uint32_t i = 0; i < ARRAY_SIZE(opt1_set); i++) {
+        opt->option1.U = opt1_set[i];
+        if (opt->option1.U & XPI_USE_PORT_B_MASK) {
+            *xpi_ch = xpi_channel_b1;
+        } else {
+            *xpi_ch = xpi_channel_a1;
+        }
+
+        /* dummy config needs to be done before actual configuration */
+        if (ROM_API_TABLE_ROOT->xpi_nor_driver_if->auto_config(base, cfg, opt)) {
+            if (CHIP_HAS_SIP_FLASH(otp)) {
+                /* do not continue to auto probe flash if the chip is sip part */
+                return 1;
+            }
+            continue;
+        }
+        return 0;
+    }
+    return 1;
+}
 /*********************************************************************
 *
 *       Public code
@@ -233,8 +250,10 @@ int Init(U32 flash_base, U32 Freq, U32 Func) {
 
     if (flash_base == XPI0_MEM_START) {
         xpi_base = HPM_XPI0;
+#ifdef XPI1
     } else if (flash_base == XPI1_MEM_START) {
         xpi_base = HPM_XPI1;
+#endif
     } else {
         return 1;
     }
@@ -251,13 +270,10 @@ int Init(U32 flash_base, U32 Freq, U32 Func) {
         *((uint8_t *)&nor_config + i) = 0;
     }
 
-    /* dummy config needs to be done before actual configuration */
-    ROM_API_TABLE_ROOT->xpi_nor_driver_if->init(xpi_base, (xpi_nor_config_t *)flash_config_dummy);
-
+#ifdef NOR_CFG_OPT1
     cfg_option.header.U = 0xFCF90002;
     cfg_option.option0.U = 0x5;
     cfg_option.option1.U = NOR_CFG_OPT1;
-
     if (cfg_option.option1.U & XPI_USE_PORT_B_MASK) {
         channel = xpi_channel_b1;
     } else {
@@ -267,6 +283,14 @@ int Init(U32 flash_base, U32 Freq, U32 Func) {
     if (ROM_API_TABLE_ROOT->xpi_nor_driver_if->auto_config(xpi_base, &nor_config, &cfg_option)) {
         return 1;
     }
+#else
+    /* flash auto probe */
+    if (flash_auto_probe(xpi_base, &cfg_option, &nor_config, &channel)) {
+        return 1;
+    }
+#endif
+    refresh_device_size(xpi_base, &cfg_option);
+
     nor_config.device_info.clk_freq_for_non_read_cmd = 0;
     xpi_inited = FLASH_INITED_FLAG;
 

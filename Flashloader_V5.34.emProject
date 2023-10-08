@@ -2,7 +2,7 @@
 <solution Name="Flashloader" target="20" version="2">
   <configuration
     Name="Common"
-    c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/boards/hpm6750evkmini;$(SolutionDir)/Src/hpm_sdk/drivers/inc;$(SolutionDir)/Src/hpm_sdk/soc/HPM6750/;$(SolutionDir)/Src/hpm_sdk/soc/ip;$(SolutionDir)/Src/hpm_sdk/arch"
+    c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/drivers/inc;$(SolutionDir)/Src/hpm_sdk/soc/ip;$(SolutionDir)/Src/hpm_sdk/arch"
     debug_target_connection="J-Link"
     gcc_enable_all_warnings="Yes" />
   <configuration
@@ -10,18 +10,22 @@
     c_preprocessor_definitions="DEBUG"
     gcc_debugging_level="Level 3"
     gcc_optimization_level="None" />
+  <configuration Name="HPM5361xxxx" />
+  <configuration Name="HPM6280xxxx" />
+  <configuration Name="HPM6284xxxx" />
   <configuration Name="HPM6360xxxx" />
+  <configuration Name="HPM6360xxxx_XPI1" />
   <configuration Name="HPM6364xxxx" />
-  <configuration Name="HPM6750xANx" />
-  <configuration Name="HPM6750xVMx" />
-  <configuration Name="HPM6754xxxx" debug_target_connection="J-Link" />
+  <configuration Name="HPM6750xxxx" />
+  <configuration Name="HPM6750xxxx_XPI1" />
+  <configuration Name="HPM6754xxxx" />
   <project Name="Flashloader">
     <configuration
       Name="Common"
       arm_linker_heap_size="1024"
       arm_linker_stack_size="1024"
       arm_linker_variant="SEGGER"
-      batch_build_configurations="HPM6360xxxx;HPM6364xxxx;HPM6750xANx;HPM6750xVMx;HPM6754xxxx"
+      batch_build_configurations="HPM6280xxxx;HPM6284xxxx;HPM6360xxxx;HPM6360xxxx_XPI1;HPM6364xxxx;HPM6750xxxx;HPM6750xxxx_XPI1;HPM6754xxxx;HPM5361xxxx"
       build_output_file_name="$(OutDir)/$(Configuration)_QSPI$(EXE)"
       heap_size="0"
       link_linker_script_file="$(ProjectDir)/Setup/Placement.icf"
@@ -39,8 +43,9 @@
       target_device_name="RISC-V" />
     <configuration
       Name="Debug"
-      c_preprocessor_definitions="DEBUG=1;XPI_FLASH_SIZE=0x10000000;NOR_CFG_OPT1=0"
-      debug_target_connection="GDB Server"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6200evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6280/"
+      c_preprocessor_definitions="DEBUG=1"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6360"
       gcc_optimization_level="None"
       gdb_server_allow_memory_access_during_execution="Yes"
       gdb_server_autostart_server="No"
@@ -54,30 +59,67 @@
       rv_architecture="rv32gc"
       stack_size="4096" />
     <configuration
-      Name="HPM6360xxxx"
-      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x1000000;NOR_CFG_OPT1=0"
+      Name="HPM5361xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm5300evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM5361/"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x100000;"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM5361"
       debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM5361/" />
+    <configuration
+      Name="HPM6280xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6200evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6280/"
+      c_preprocessor_definitions="DEBUG=0"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6280"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6200/" />
+    <configuration
+      Name="HPM6284xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6200evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6280/"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6280"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6200/" />
+    <configuration
+      Name="HPM6360xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6300evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6360/"
+      c_preprocessor_definitions="DEBUG=0"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6360"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6300/" />
+    <configuration
+      Name="HPM6360xxxx_XPI1"
+      c_preprocessor_definitions="XPI1=1;DEBUG=0"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6360"
       post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6300/" />
     <configuration
       Name="HPM6364xxxx"
-      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;NOR_CFG_OPT1=0x1000"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6300evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6360/"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;"
       debug_target_connection="J-Link"
       post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6300/" />
     <configuration
-      Name="HPM6750xANx"
-      c_preprocessor_definitions="DEBUG=0;NOR_CFG_OPT1=0x100;XPI_FLASH_SIZE=0x10000000"
+      Name="HPM6750xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6750evkmini;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6750/"
+      c_preprocessor_definitions="DEBUG=0"
       debug_target_connection="J-Link"
-      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/"
-      stack_size="4096" />
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/" />
     <configuration
-      Name="HPM6750xVMx"
-      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x1000000;NOR_CFG_OPT1=0"
-      debug_target_connection="J-Link"
+      Name="HPM6750xxxx_XPI1"
+      c_preprocessor_definitions="XPI1=1;DEBUG=0"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6750"
       post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/" />
     <configuration
       Name="HPM6754xxxx"
-      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;NOR_CFG_OPT1=0x1000"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm6750evkmini;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM6750/"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x800000;"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM6750"
       post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM6700/" />
+    <configuration
+      Name="HPM5361xxxx"
+      c_additional_options="-I$(SolutionDir)/Src/hpm_sdk/boards/hpm5300evk;-I$(SolutionDir)/Src/hpm_sdk/soc/HPM5361/"
+      c_preprocessor_definitions="DEBUG=0;XPI_FLASH_SIZE=0x100000;"
+      c_user_include_directories=".;$(SolutionDir)/Src/hpm_sdk/soc/HPM5361"
+      debug_target_connection="J-Link"
+      post_build_command="cp $(ProjectDir)/$(OutDir)/$(Configuration)_QSPI$(EXE) $(ProjectDir)/JLink/Devices/hpmicro/HPM5361/" />
+
     <folder Name="Setup">
       <file file_name="Setup/MemoryMap.xml" />
       <file file_name="Setup/Placement.icf" />
@@ -85,14 +127,14 @@
     <folder Name="Src">
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
       <file file_name="Src/FlashDev.c" />
+      <file file_name="Src/FlashDev.h" />
       <file file_name="Src/FlashOS.h" />
       <file file_name="Src/FlashPrg.c" />
-      <file file_name="Src/SEGGER_OFL_Lib_RV32.a" />
-      <file file_name="Src/SEGGER_RV32_crt0.s">
-        <configuration Name="HPM6754xxxx" build_exclude_from_build="No" />
-      </file>
       <file file_name="Src/main.c">
         <configuration Name="HPM6750EVKMINI" build_exclude_from_build="No" />
+      </file>
+      <file file_name="Src/SEGGER_OFL_Lib_RV32.a" />
+      <file file_name="Src/SEGGER_RV32_crt0.s">
         <configuration Name="HPM6754xxxx" build_exclude_from_build="No" />
       </file>
     </folder>

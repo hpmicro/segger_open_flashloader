@@ -49,6 +49,7 @@ Purpose : Flash device description Template
 */
 
 #include "FlashOS.h"
+#include "FlashDev.h"
 
 struct SECTOR_INFO  {
   U32 SectorSize;       // Sector Size in bytes
@@ -71,10 +72,23 @@ struct FlashDevice {
 
 struct FlashDevice const FlashDevice __attribute__ ((section ("DevDscr"))) = {
   0x0101,                         // Algo version. Must be == 0x0101
-  { "HPM XPI Nor Flash" },  // Flash device name
+#ifdef XPI1
+  { "HPM XPI Nor Flash XPI1" },  // Flash device name
+#else
+  { "HPM XPI Nor Flash XPI0" },  // Flash device name
+#endif
   1,                              // Flash device type. Must be == 1
-  0x80000000,                     // Flash base address
-  XPI_FLASH_SIZE,                     // Total flash device size in Bytes
+#ifdef XPI1
+  XPI1_MEM_START,
+#else
+  XPI0_MEM_START,                     // Flash base address
+#endif
+
+#ifdef XPI_FLASH_SIZE
+  XPI_FLASH_SIZE,
+#else
+  0x10000000,                     // Total flash device size in Bytes
+#endif
   256,                            // Page Size (Will be passed as <NumBytes> to ProgramPage(). A multiple of this is passed as <NumBytes> to SEGGER_OPEN_Program() to program moer than 1 page in 1 RAMCode call, speeding up programming).
   0,                              // Reserved, should be 0
   0xFF,                           // Flash erased value
@@ -98,3 +112,4 @@ struct FlashDevice const FlashDevice __attribute__ ((section ("DevDscr"))) = {
     { 0xFFFFFFFF, 0xFFFFFFFF }    // Indicates the end of the flash sector layout. Must be present.
   }
 };
+
