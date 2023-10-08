@@ -1,3 +1,8 @@
 Output/*
 .DS_Store
 *.emSession
+*.sh
+*.py
+*.pyc
+*.tar.gz
+*.zip
